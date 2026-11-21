@@ -45,14 +45,22 @@ def add_or_update_stock():
     
     # 1. Input & Validate Stock Symbol
     while True:
-        symbol = input("Enter the stock symbol (e.g., AAPL): ").strip().upper()
+        try:
+            symbol = input("Enter the stock symbol (e.g., AAPL): ").strip().upper()
+        except (KeyboardInterrupt, EOFError):
+            print("\nOperation cancelled.")
+            return
         if symbol in STOCK_PRICES:
             break
         print(f"Error: '{symbol}' is not in our stock catalog. Please select a valid stock.")
 
     # 2. Input & Validate Quantity
     while True:
-        qty_str = input(f"Enter quantity of {symbol} shares to add/update: ").strip()
+        try:
+            qty_str = input(f"Enter quantity of {symbol} shares to add/update: ").strip()
+        except (KeyboardInterrupt, EOFError):
+            print("\nOperation cancelled.")
+            return
         try:
             quantity = int(qty_str)
             if quantity <= 0:
@@ -87,7 +95,11 @@ def remove_stock():
     print("-" * 40)
 
     while True:
-        symbol = input("Enter the stock symbol to remove/reduce: ").strip().upper()
+        try:
+            symbol = input("Enter the stock symbol to remove/reduce: ").strip().upper()
+        except (KeyboardInterrupt, EOFError):
+            print("\nOperation cancelled.")
+            return
         if symbol in portfolio:
             break
         print("Error: This stock is not in your current portfolio.")
@@ -95,7 +107,11 @@ def remove_stock():
     # Ask for reduction quantity
     current_shares = portfolio[symbol]
     while True:
-        qty_str = input(f"Enter number of shares to remove (Max {current_shares}): ").strip()
+        try:
+            qty_str = input(f"Enter number of shares to remove (Max {current_shares}): ").strip()
+        except (KeyboardInterrupt, EOFError):
+            print("\nOperation cancelled.")
+            return
         try:
             qty_to_remove = int(qty_str)
             if qty_to_remove <= 0:
@@ -201,12 +217,9 @@ def export_reports():
     try:
         with open(csv_filename, "w", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
-            # Write headers
             writer.writerow(["Stock Symbol", "Shares Owned", "Price Per Share ($)", "Total Value ($)"])
-            # Write individual rows
             for item in holdings:
                 writer.writerow([item['Symbol'], item['Shares'], item['Price'], item['TotalValue']])
-            # Write total summary
             writer.writerow([])
             writer.writerow(["GRAND TOTAL", "", "", grand_total])
             
@@ -232,7 +245,11 @@ def main():
         print("5. Save & Export Report (TXT + CSV)")
         print("6. Exit Program")
         
-        choice = input("Enter choice (1-6): ").strip()
+        try:
+            choice = input("Enter choice (1-6): ").strip()
+        except (KeyboardInterrupt, EOFError):
+            print("\nExiting program. Goodbye!")
+            break
         
         if choice == "1":
             show_stock_catalog()
